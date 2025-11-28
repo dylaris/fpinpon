@@ -1,17 +1,36 @@
-format ELF64 executable
+format ELF64
 
-include "constant.inc"
-include "syscall.inc"
+section ".data" writeable
 
-segment readable writeable
+width equ 640
+height equ 480
+title: db "Hello, World", 0
 
-hello: db "Hello, World", 10, 0
-hello_len = $ - hello - 1
+section ".text" executable
 
-segment readable executable
+public main
 
-entry _start
+extrn InitWindow
+extrn CloseWindow
+extrn WindowShouldClose
 
-_start:
-    write STDOUT_FILENO, hello, hello_len
-    exit 69
+main:
+    push rbp
+    mov rbp, rsp
+
+    mov rdi, width
+    mov rsi, height
+    mov rdx, title
+    call InitWindow
+
+.begin:
+    call WindowShouldClose
+    cmp rax, 0
+    jnz .end
+    jmp .begin
+.end:
+
+    call CloseWindow
+
+    pop rbp
+    ret
