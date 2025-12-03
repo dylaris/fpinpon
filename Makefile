@@ -2,7 +2,7 @@
 all: main
 
 main: main.o
-	gcc -Wall -Wextra -z noexecstack -o main main.o ./raylib/lib/libraylib.a -lm
+	gcc -Wall -Wextra -z noexecstack -ggdb -o main main.o ./raylib/lib/libraylib.a -lm
 
 main.o: main.asm
 	fasm main.asm
